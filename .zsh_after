@@ -1,0 +1,35 @@
+export EDITOR="nvim"
+export WANDB_MODE="offline"
+
+alias nv="nvim"
+alias kssh="kitten ssh"
+alias lg="lazygit"
+alias :q="exit"
+alias zb="zen-browser"
+alias bc='autossh -M 0 -t dchen3@login3.babel.cs.cmu.edu "dtach -A /tmp/dtach zsh"'
+
+eval "$(starship init zsh)"
+rxfetch
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/usr/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/usr/etc/profile.d/conda.sh" ]; then
+        . "/usr/etc/profile.d/conda.sh"
+    else
+        export PATH="/usr/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+# BEGIN opam configuration
+# This is useful if you're using opam as it adds:
+#   - the correct directories to the PATH
+#   - auto-completion for the opam binary
+# This section can be safely removed at any time if needed.
+[[ ! -r '/home/dc/.opam/opam-init/init.zsh' ]] || source '/home/dc/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null
+# END opam configuration
