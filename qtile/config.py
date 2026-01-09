@@ -32,7 +32,6 @@ from libqtile.config import Click, Drag, Group, Key, Match, Screen, KeyChord
 from libqtile.lazy import lazy
 from color import colors
 from popup import show_graphs, show_groups
-from _MutableScratch import MutableScratch
 
 monitor_file = "/tmp/multi_head"
 monitors = 1
@@ -228,170 +227,7 @@ layouts = [
     floating_layout,
 ]
 
-widget_defaults = dict(
-    font="Iosevka Nerd Font",
-    fontsize=18 if monitors == 1 else 15,
-    padding=5,
-    background=colors["alt_background"],
-)
-
-extension_defaults = widget_defaults.copy()
-
-bar1 = bar.Bar(
-    [
-        widget.CurrentLayoutIcon(
-            custom_icon_paths=[os.path.expanduser("~/.config/qtile/icons")]
-        ),
-        widget.WindowCount(),
-        widget.GroupBox(
-            font="Iosevka Nerd Font",
-            fontsize=20,
-            highlight_method="line",
-            highlight_color=colors["highlight"],
-            this_current_screen_border=colors["green"],
-            current_screen_border=colors["purple"],
-            other_current_screen_border=colors["green"],
-            other_screen_border=colors["purple"],
-            active=colors["purple"],
-            inactive=colors["comment"],
-            urgent_border=colors["red"],
-        ),
-        widget.Spacer(),
-        widget.Chord(
-            chords_colors={
-                "launch": ("#ff0000", "#ffffff"),
-            },
-            name_transform=lambda name: name.upper(),
-        ),
-        widget.NvidiaSensors(),
-        widget.MemoryGraph(),
-        widget.CPUGraph(),
-        widget.CheckUpdates(distro="Arch_yay"),
-        widget.Systray(),
-        widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-        widget.Backlight(
-            change_command="brightnessctl s {0}",
-            backlight_name="nvidia_wmi_ec_backlight",
-        ),
-        widget.Battery(
-            format="{char} {percent:2.0%}",
-            charge_char="󱟦",
-            discharge_char="󱟤",
-            unknown_char="󱉝",
-            low_percentage=0.2,
-            low_foreground=colors["red"],
-        ),
-    ],
-    35,
-    margin=[12, 12, 6, 12],
-    border_width=2,
-    border_color=colors["orange"],
-    background=colors["alt_background"],
-)
-
-bar2 = bar.Bar(
-    [
-        widget.CurrentLayoutIcon(
-            custom_icon_paths=[os.path.expanduser("~/.config/qtile/icons")]
-        ),
-        widget.WindowCount(),
-        widget.GroupBox(
-            font="Iosevka Nerd Font",
-            highlight_method="line",
-            highlight_color=colors["highlight"],
-            this_current_screen_border=colors["green"],
-            current_screen_border=colors["purple"],
-            other_current_screen_border=colors["green"],
-            other_screen_border=colors["purple"],
-            active=colors["purple"],
-            inactive=colors["comment"],
-            urgent_border=colors["red"],
-        ),
-        widget.Spacer(),
-        widget.Chord(
-            chords_colors={
-                "launch": ("#ff0000", "#ffffff"),
-            },
-            name_transform=lambda name: name.upper(),
-        ),
-        widget.NvidiaSensors(),
-        widget.MemoryGraph(),
-        widget.CPUGraph(),
-        widget.CheckUpdates(distro="Arch_yay"),
-        widget.Systray(),
-        widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-        widget.Battery(
-            format="{char} {percent:2.0%}",
-            charge_char="󱟦",
-            discharge_char="󱟤",
-            unknown_char="󱉝",
-            low_percentage=0.2,
-            low_foreground=colors["red"],
-        ),
-    ],
-    27,
-    margin=[12, 12, 6, 12],
-    border_width=2,
-    border_color=colors["orange"],
-    background=colors["alt_background"],
-)
-
-bar3 = bar.Bar(
-    [
-        widget.CurrentLayoutIcon(
-            custom_icon_paths=[os.path.expanduser("~/.config/qtile/icons")]
-        ),
-        widget.WindowCount(),
-        widget.GroupBox(
-            font="Iosevka Nerd Font",
-            highlight_method="line",
-            highlight_color=colors["highlight"],
-            this_current_screen_border=colors["green"],
-            current_screen_border=colors["purple"],
-            other_current_screen_border=colors["green"],
-            other_screen_border=colors["purple"],
-            active=colors["purple"],
-            inactive=colors["comment"],
-            urgent_border=colors["red"],
-        ),
-        widget.Spacer(),
-        widget.Chord(
-            chords_colors={
-                "launch": ("#ff0000", "#ffffff"),
-            },
-            name_transform=lambda name: name.upper(),
-        ),
-        widget.NvidiaSensors(),
-        widget.MemoryGraph(),
-        widget.CPUGraph(),
-        widget.CheckUpdates(distro="Arch_yay"),
-        widget.Systray(),
-        widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-        widget.Battery(
-            format="{char} {percent:2.0%}",
-            charge_char="󱟦",
-            discharge_char="󱟤",
-            unknown_char="󱉝",
-            low_percentage=0.2,
-            low_foreground=colors["red"],
-        ),
-    ],
-    50,
-    margin=[0, 100, 100, 0],
-    border_width=2,
-    border_color=colors["orange"],
-    background=colors["alt_background"],
-)
-
 screen1 = Screen(
-    top=bar1,
-    wallpaper=os.path.expanduser(
-        "~/images/wallpapers/wallpaper-master/first-collection/arch.png"
-    ),
-    wallpaper_mode="fill",
-)
-
-screen2 = Screen(
     wallpaper=os.path.expanduser(
         "~/images/wallpapers/wallhaven-xld8rd.jpg",
     ),
@@ -466,19 +302,6 @@ reconfigure_screens = True
 auto_minimize = True
 
 wmname = "qtile"
-
-# mutscr = MutableScratch("scratch")
-# groups.append(Group("scratch"))  # Must be after `groups` is created
-
-# keys.extend(
-#     [
-#         Key([mod], "a", mutscr.add_current_window()),
-#         Key([mod], "d", mutscr.remove_current_window()),
-#         Key([mod], "t", mutscr.toggle()),
-#     ]
-# )
-#
-# hook.subscribe.startup_complete(mutscr.qtile_startup)
 
 
 @hook.subscribe.startup_once
