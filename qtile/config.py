@@ -35,6 +35,9 @@ from popup import show_graphs, show_groups
 
 monitor_file = "/tmp/multi_head"
 monitors = 1
+config_dir = os.environ.get(
+    "XDG_CONFIG_HOME", os.path.join(os.path.expanduser("~"), ".config")
+)
 if os.path.exists(monitor_file):
     with open(monitor_file, "r") as f:
         monitors = int(f.read().strip())
@@ -228,50 +231,28 @@ layouts = [
 ]
 
 screen1 = Screen(
-    wallpaper=os.path.expanduser(
-        "~/images/wallpapers/wallhaven-xld8rd.jpg",
-    ),
+    wallpaper=os.path.expanduser(os.path.join(config_dir, "fractal.jpg")),
+    wallpaper_mode="fill",
+)
+
+screen2 = Screen(
+    wallpaper=os.path.expanduser(os.path.join(config_dir, "fractal.jpg")),
     wallpaper_mode="fill",
 )
 
 screen3 = Screen(
-    wallpaper=os.path.expanduser(
-        "~/images/wallpapers/wallhaven-xld8rd.jpg",
-    ),
+    wallpaper=os.path.expanduser(os.path.join(config_dir, "fractal.jpg")),
     wallpaper_mode="fill",
 )
-
-screen4 = Screen(
-    wallpaper=os.path.expanduser(
-        "~/images/wallpapers/wallhaven-xld8rd.jpg",
-    ),
-    wallpaper_mode="fill",
-)
-
-screen5 = Screen(
-    wallpaper=os.path.expanduser("~/images/wallpapers/wallhaven-xld8rd.jpg"),
-    wallpaper_mode="fill",
-)
-
-screen6 = Screen(
-    wallpaper=os.path.expanduser("~/images/wallpapers/wallhaven-xld8rd.jpg"),
-    wallpaper_mode="fill",
-)
-
-screen7 = Screen(
-    wallpaper=os.path.expanduser("~/images/wallpapers/wallhaven-xld8rd.jpg"),
-    wallpaper_mode="fill",
-)
-
 
 if monitors == 1:
-    screens = [screen5]
+    screens = [screen1]
 elif monitors == 2:
-    screens = [screen5, screen6]
+    screens = [screen1, screen2]
 # elif monitors == 3:
 #     screens = [screen6, screen7]
 else:
-    screens = [screen2, screen3, screen4]
+    screens = [screen1, screen2, screen3]
 
 # Drag floating layouts.
 mouse = [
