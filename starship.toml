@@ -1,0 +1,61 @@
+format = """
+$username$directory$python$git_branch$git_status
+$cmd_duration$character"""
+
+[character]
+success_symbol = "[ |](bold green) "
+error_symbol = "[ |](bold red) "
+vicmd_symbol = "[V](bold green) "
+format = "$symbol"
+
+[directory]
+fish_style_pwd_dir_length = 1
+format = "in [$path]($style)[$read_only]($read_only_style) "
+repo_root_style = "bold cyan underline"
+truncate_to_repo = false
+
+[python]
+symbol="󰌠 "
+
+[fill]
+symbol=" "
+
+[time]
+disabled = false
+format = '[$time]($style) '
+time_format = "%T"
+utc_time_offset = "-5"
+style = "bold fg:#bd93f9"
+
+[cmd_duration]
+min_time = 500
+format = "took [$duration](bold yellow) "
+
+# [env_var]
+# variable = "SHELL"
+# default = "unknown shell"
+
+# [memory_usage]
+# disabled = false
+# threshold = -1
+# symbol = " "
+# format = '[\[ ${ram} \]]($style) '
+# style = "bold purple"
+
+# [status]
+# disabled = false
+# map_symbol = true
+
+[username]
+disabled = false
+show_always = true
+style_user = "bold fg:#bd93f9"
+format = '[$user]($style) '
+
+# [hostname]
+# ssh_only=false
+# disabled=false
+# format = " from [$hostname](purple)"
+
+[git_branch]
+symbol=" "
