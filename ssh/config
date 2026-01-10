@@ -1,0 +1,11 @@
+Host github.com
+        User git
+        Hostname github.com
+        PreferredAuthentications publickey
+        IdentityFile ~/.ssh/id_ed25519
+Host login.babel.cs.cmu.edu
+	User dchen3
+        IdentityFile ~/.ssh/id_ed25519
+Host login.babel.cs.cmu.edu
+	User ipshah
+        IdentityFile ~/.ssh/ish_id_ed25519
