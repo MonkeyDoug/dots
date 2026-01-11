@@ -24,6 +24,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import re
 import os
 import subprocess
 from libqtile import bar, layout, extension, hook
@@ -31,13 +32,11 @@ from qtile_extras import widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen, KeyChord
 from libqtile.lazy import lazy
 from color import colors
+from constants import CONFIG_DIR
 from popup import show_graphs, show_groups
 
 monitor_file = "/tmp/multi_head"
 monitors = 1
-config_dir = os.environ.get(
-    "XDG_CONFIG_HOME", os.path.join(os.path.expanduser("~"), ".config")
-)
 if os.path.exists(monitor_file):
     with open(monitor_file, "r") as f:
         monitors = int(f.read().strip())
@@ -82,8 +81,8 @@ keys = [
     Key(
         [mod],
         "p",
-        lazy.spawn(os.path.expanduser("~/.config/rofi/scripts/launcher_t6")),
-        desc="Launches rofi",
+        lazy.spawn("kitty --title jiffy -o window_margin_width=3 -o cursor=#282a36 jiffy -m Apps --refresh"),
+        desc="Launches menu",
     ),
     Key([mod], "z", lazy.screen.toggle_group(), desc="Move to last group"),
     Key([mod, "shift"], "e", lazy.spawn("kitty nvim"), desc="Launch neovim"),
@@ -162,17 +161,7 @@ groups[4] = Group(
     label="󰔷 ",
     layout="max",
     matches=[
-        Match(
-            wm_class=[
-                "spotify",
-                "discord",
-                "clickup",
-                "Spotify",
-                "easyeffects",
-                "slack",
-                "Slack",
-            ]
-        )
+        Match(wm_class=re.compile(r"^(spotify|discord|clickup|Spotify|easyeffects|slack|Slack)$"))
     ],
 )
 
@@ -204,24 +193,22 @@ layout_settings = {
 }
 
 floating_layout = layout.Floating(
-    **layout_settings,
+    border_width=1,
+    border_focus=layout_settings["border_normal"],
+    border_normal=layout_settings["border_normal"],
+    margin=layout_settings["margin"],
     float_rules=[
         # Run the utility of `xprop` to see the wm class and name of an X client.
         *layout.Floating.default_float_rules,
-        Match(wm_class="confirmreset"),  # gitk
-        Match(wm_class="makebranch"),  # gitk
-        Match(wm_class="maketag"),  # gitk
-        Match(wm_class="ssh-askpass"),  # ssh-askpass
-        Match(title="branchdialog"),  # gitk
-        Match(title="pinentry"),  # GPG key password entry
-    ]
+        Match(title="jiffy"),
+    ],
 )
 
 layouts = [
     layout.Max(
         border_width=0,
-        border_focus=colors["green"],
-        border_normal=colors["purple"],
+        border_focus=layout_settings["border_focus"],
+        border_normal=layout_settings["border_normal"],
         margin=0,
     ),
     layout.MonadTall(**layout_settings, single_margin=0),
@@ -231,17 +218,17 @@ layouts = [
 ]
 
 screen1 = Screen(
-    wallpaper=os.path.expanduser(os.path.join(config_dir, "fractal.jpg")),
+    wallpaper=os.path.expanduser(os.path.join(CONFIG_DIR, "fractal.jpg")),
     wallpaper_mode="fill",
 )
 
 screen2 = Screen(
-    wallpaper=os.path.expanduser(os.path.join(config_dir, "fractal.jpg")),
+    wallpaper=os.path.expanduser(os.path.join(CONFIG_DIR, "fractal.jpg")),
     wallpaper_mode="fill",
 )
 
 screen3 = Screen(
-    wallpaper=os.path.expanduser(os.path.join(config_dir, "fractal.jpg")),
+    wallpaper=os.path.expanduser(os.path.join(CONFIG_DIR, "fractal.jpg")),
     wallpaper_mode="fill",
 )
 
@@ -249,8 +236,6 @@ if monitors == 1:
     screens = [screen1]
 elif monitors == 2:
     screens = [screen1, screen2]
-# elif monitors == 3:
-#     screens = [screen6, screen7]
 else:
     screens = [screen1, screen2, screen3]
 
@@ -287,5 +272,4 @@ wmname = "qtile"
 
 @hook.subscribe.startup_once
 def start_once():
-    script = os.path.expanduser("~/.config/qtile/autostart.sh")
-    subprocess.call(script)
+    subprocess.call(os.path.join(CONFIG_DIR, "qtile", "autostart.sh"))

@@ -2,21 +2,19 @@ import os
 from libqtile import widget
 from libqtile.lazy import lazy
 from qtile_extras.popup.toolkit import (
-    PopupRelativeLayout,
-    PopupWidget,
-    PopupGridLayout,
-    PopupText,
-    PopupImage,
+   PopupRelativeLayout,
+   PopupWidget,
+   PopupGridLayout,
+   PopupText,
+   PopupImage,
 )
-from libqtile.log_utils import logger
 from color import colors
 from settings import settings
-from xutils import get_icon
+from find_icon import find_app_icon
 import os
-
+from constants import ASSETS_DIR
 
 util_popup, groups_popup = None, None
-
 
 def show_groups(qtile):
     global groups_popup
@@ -55,28 +53,29 @@ def show_groups(qtile):
             )
         )
         for j, window in enumerate(group.windows):
-            icon = get_icon(window.name)
-            if not icon:
+            found_icon = False
+            for wm_class in window.info()["wm_class"]:
+                icon_path = find_app_icon(wm_class)
+                if icon_path is None: continue
                 controls.append(
                     PopupImage(
-                        filename=os.path.join("/home", "dc", "unknown.png"),
+                        filename=icon_path,
                         row=j + 1,
                         col=i,
                         fontsize=settings["font_size"],
                     )
                 )
-                continue
-            icon.save(
-                os.path.join("/tmp", str(counter) + ".png"),
-            )
-            controls.append(
-                PopupImage(
-                    filename=os.path.join("/tmp", str(counter) + ".png"),
-                    row=j + 1,
-                    col=i,
-                    fontsize=settings["font_size"],
+                found_icon = True
+                break
+            if not found_icon:
+                controls.append(
+                    PopupImage(
+                        filename=os.path.join(ASSETS_DIR, "unknown.png"),
+                        row=j + 1,
+                        col=i,
+                        fontsize=settings["font_size"],
+                    )
                 )
-            )
             counter += 1
 
     groups_popup = PopupGridLayout(
@@ -105,10 +104,10 @@ def show_graphs(qtile):
 
     controls = [
         PopupWidget(
-            widget=widget.NvidiaSensors(
+            widget=widget.Clock(
                 background=colors["background"], fontsize=settings["font_size"]
             ),
-            width=0.075,
+            width=0.07,
             height=0.9,
             pos_x=0.025,
             pos_y=0.05,

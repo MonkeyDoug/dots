@@ -1,7 +1,3 @@
 #!/bin/sh
 
-picom &
-dunst &
-lxsession &
-lxpolkit &
-xidlehook --not-when-fullscreen --not-when-audio --timer 60 "i3lock-fancy-dualmonitor" "" &
+# wlr-randr --output eDP-1 --scale 1.5
