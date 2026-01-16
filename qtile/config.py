@@ -27,19 +27,13 @@
 import re
 import os
 import subprocess
-from libqtile import bar, layout, extension, hook
-from qtile_extras import widget
-from libqtile.config import Click, Drag, Group, Key, Match, Screen, KeyChord
+from libqtile import layout, hook
+from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from color import colors
 from constants import CONFIG_DIR
 from popup import show_graphs, show_groups
 
-monitor_file = "/tmp/multi_head"
-monitors = 1
-if os.path.exists(monitor_file):
-    with open(monitor_file, "r") as f:
-        monitors = int(f.read().strip())
 
 mod = "mod4"
 terminal = "kitty"
@@ -81,7 +75,9 @@ keys = [
     Key(
         [mod],
         "p",
-        lazy.spawn("kitty --title jiffy -o window_margin_width=3 -o cursor=#282a36 jiffy -m Apps --refresh"),
+        lazy.spawn(
+            "kitty --title jiffy -o window_margin_width=3 -o cursor=#282a36 jiffy -m Apps --refresh"
+        ),
         desc="Launches menu",
     ),
     Key([mod], "z", lazy.screen.toggle_group(), desc="Move to last group"),
@@ -120,8 +116,7 @@ keys = [
     Key(
         ["mod1"],
         "F9",
-        # lazy.spawn("flameshot gui"),
-        lazy.spawn("spectacle"),
+        lazy.spawn("maim -s -u | xclip -selection clipboard -t image/png"),
     ),
     Key(
         [],
@@ -141,7 +136,7 @@ keys = [
     Key(
         [mod, "mod1"],
         "l",
-        lazy.spawn('i3lock-fancy-dualmonitor "" ""'),
+        lazy.spawn("swaylock"),
         desc="Lock screen",
     ),
     Key(
@@ -152,7 +147,7 @@ keys = [
     ),
     Key([mod], "b", lazy.function(show_graphs)),
     Key([mod], "l", lazy.function(show_groups)),
-    Key([], "Print", lazy.spawn("spectacle")),
+    Key([], "Print", lazy.spawn("slurp | grim -g - - | wl-copy -t image/png")),
 ]
 
 groups = [Group(i, label="󰔷 ") for i in "123456789"]
@@ -161,7 +156,11 @@ groups[4] = Group(
     label="󰔷 ",
     layout="max",
     matches=[
-        Match(wm_class=re.compile(r"^(spotify|discord|clickup|Spotify|easyeffects|slack|Slack)$"))
+        Match(
+            wm_class=re.compile(
+                r"^(spotify|discord|clickup|Spotify|easyeffects|slack|Slack)$"
+            )
+        )
     ],
 )
 
@@ -217,27 +216,27 @@ layouts = [
     floating_layout,
 ]
 
-screen1 = Screen(
+laptop = Screen(
     wallpaper=os.path.expanduser(os.path.join(CONFIG_DIR, "fractal.jpg")),
     wallpaper_mode="fill",
 )
 
-screen2 = Screen(
+top_left = Screen(
     wallpaper=os.path.expanduser(os.path.join(CONFIG_DIR, "fractal.jpg")),
     wallpaper_mode="fill",
 )
 
-screen3 = Screen(
+top_right = Screen(
     wallpaper=os.path.expanduser(os.path.join(CONFIG_DIR, "fractal.jpg")),
     wallpaper_mode="fill",
 )
 
-if monitors == 1:
-    screens = [screen1]
-elif monitors == 2:
-    screens = [screen1, screen2]
-else:
-    screens = [screen1, screen2, screen3]
+bottom = Screen(
+    wallpaper=os.path.expanduser(os.path.join(CONFIG_DIR, "fractal.jpg")),
+    wallpaper_mode="fill",
+)
+
+screens = [laptop, top_left, top_right, bottom]
 
 # Drag floating layouts.
 mouse = [
@@ -271,5 +270,15 @@ wmname = "qtile"
 
 
 @hook.subscribe.startup_once
-def start_once():
+def startup_once():
     subprocess.call(os.path.join(CONFIG_DIR, "qtile", "autostart.sh"))
+
+
+@hook.subscribe.startup
+def startup():
+    subprocess.call(["autorandr", "--change"])
+
+
+@hook.subscribe.screen_change
+def screen_change(_):
+    subprocess.call(["autorandr", "--change"])
