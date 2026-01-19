@@ -35,8 +35,8 @@ fi
 
 # --- Install Packages ---
 echo "Installing packages..."
-yay -S --needed --noconfirm zsh neovim-nightly-bin kitty starship rxfetch openssh unzip
-yay -S --needed --noconfirm qtile qtile-extras
+yay -S --needed --noconfirm zsh neovim-nightly-bin kitty starship rxfetch openssh unzip i3lock-color xidlehook
+yay -S --needed --noconfirm qtile qtile-extras ttf-iosevka-nerd
 yay -S --needed --noconfirm xorg xorg-xinit
 
 # --- Setup Xorg ---
@@ -98,20 +98,22 @@ ln -sf "$THEME_DEST/zsh/dracula.zsh-theme" "$ZSH_CUSTOM/themes/dracula.zsh-theme
 curl -L -o "$THEME_DEST/gtk.zip" https://github.com/dracula/gtk/archive/master.zip
 mkdir -p "$HOME/.themes"
 unzip -o "$THEME_DEST/gtk.zip" -d "$HOME/.themes/"
-mv "$HOME/.themes/gtk-master" "$HOME/.themes/Dracula"
+mv -n "$HOME/.themes/gtk-master" "$HOME/.themes/Dracula"
 
 install_plugin "https://github.com/dracula/gtk.git" "$THEME_DEST/gtk"
 ln -sf "$THEME_DEST/gtk/assets" "$XDG_CONFIG_HOME/assets"
 mkdir -p "$XDG_CONFIG_HOME/gtk-4.0"
 ln -sf "$THEME_DEST/gtk/gtk-4.0/gtk.css" "$XDG_CONFIG_HOME/gtk-4.0/gtk.css"
 ln -sf "$THEME_DEST/gtk/gtk-4.0/gtk-dark.css" "$XDG_CONFIG_HOME/gtk-4.0/gtk-dark.css"
-# gsettings set org.gnome.desktop.interface gtk-theme "Dracula" 
-# gsettings set org.gnome.desktop.wm.preferences theme "Dracula"
 
 curl -L -o "$THEME_DEST/icons.zip" https://github.com/dracula/gtk/files/5214870/Dracula.zip
 mkdir -p "$HOME/.icons"
 unzip -o "$THEME_DEST/icons.zip" -d "$HOME/.icons/"
-# gsettings set org.gnome.desktop.interface icon-theme "Dracula"
+
+# i3-lock
+mkdir -p "$HOME/.local/bin"
+chmod +x "$XDG_CONFIG_HOME/i3lock-color/lock"
+ln -sf "$XDG_CONFIG_HOME/i3lock-color/lock" "$HOME/.local/bin/i3lock-dracula"
 
 # --- Install Dev Packages ---
 echo "Installing dev packages..."
