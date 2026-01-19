@@ -1,12 +1,13 @@
 export EDITOR="nvim"
 export WANDB_MODE="offline"
+export PATH="$PATH:$HOME/.local/bin"
 
 alias nv="nvim"
 alias kssh="kitten ssh"
 alias lg="lazygit"
 alias :q="exit"
 alias zb="zen-browser"
-alias bc='autossh -M 0 -t dchen3@login3.babel.cs.cmu.edu "dtach -A /tmp/dtach zsh"'
+alias bc='autossh -M 0 -t dchen3@login1.babel.cs.cmu.edu "dtach -A /tmp/dtach zsh"'
 
 eval "$(starship init zsh)"
 rxfetch
