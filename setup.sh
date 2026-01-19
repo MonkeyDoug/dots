@@ -119,4 +119,11 @@ ln -sf "$XDG_CONFIG_HOME/i3lock-color/lock" "$HOME/.local/bin/i3lock-dracula"
 echo "Installing dev packages..."
 yay -S --needed --noconfirm tree-sitter tree-sitter-cli pyright bash-language-server
 
+# add correct permissions
+sudo chown root:root limit.sh
+sudo chmod 700 "$XDG_CONFIG_HOME/limit.sh"
+echo "Add $XDG_CONFIG_HOME/limit.sh to sudoers"
+
+chmod +x "$XDG_CONFIG_HOME/screenshot.sh"
+
 echo "Setup complete!"

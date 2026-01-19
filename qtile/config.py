@@ -116,7 +116,7 @@ keys = [
     Key(
         ["mod1"],
         "F9",
-        lazy.spawn("maim -s -u | xclip -selection clipboard -t image/png"),
+        lazy.spawn(os.path.join(CONFIG_DIR, "screenshot.sh")),
     ),
     Key(
         [],
@@ -136,7 +136,7 @@ keys = [
     Key(
         [mod, "mod1"],
         "l",
-        lazy.spawn("swaylock"),
+        lazy.spawn(os.path.join(CONFIG_DIR, "i3lock-color", "lock")),
         desc="Lock screen",
     ),
     Key(
@@ -147,7 +147,7 @@ keys = [
     ),
     Key([mod], "b", lazy.function(show_graphs)),
     Key([mod], "l", lazy.function(show_groups)),
-    Key([], "Print", lazy.spawn("slurp | grim -g - - | wl-copy -t image/png")),
+    Key([], "Print", lazy.spawn(os.path.join(CONFIG_DIR, "screenshot.sh"))),
 ]
 
 groups = [Group(i, label="󰔷 ") for i in "123456789"]
@@ -275,10 +275,12 @@ def startup_once():
 
 
 @hook.subscribe.startup
-def startup():
-    subprocess.call(["autorandr", "--change"])
-
-
 @hook.subscribe.screen_change
-def screen_change(_):
+def apply_power_settings(*args):
     subprocess.call(["autorandr", "--change"])
+
+    # set battery limit to 80 if docked, 100 otherwise
+    result = subprocess.run(["autorandr", "--current"], capture_output=True, text=True)
+    limit = "80" if "docked" in result.stdout else "100"
+    # script is added to sudoers so does not need password
+    subprocess.call(["sudo", os.path.join(CONFIG_DIR, "limit.sh"), limit])
