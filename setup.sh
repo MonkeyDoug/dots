@@ -38,6 +38,7 @@ echo "Installing packages..."
 yay -S --needed --noconfirm zsh neovim-nightly-bin kitty starship rxfetch openssh unzip i3lock-color xidlehook
 yay -S --needed --noconfirm qtile qtile-extras ttf-iosevka-nerd
 yay -S --needed --noconfirm xorg xorg-xinit
+yay -S --needed --noconfirm zathura zathura-pdf-poppler
 
 # --- Setup Xorg ---
 ln -sf "$XDG_CONFIG_HOME/.xinitrc" "$HOME/.xinitrc"
@@ -95,9 +96,9 @@ install_plugin "https://github.com/dracula/zsh.git" "$THEME_DEST/zsh"
 ln -sf "$THEME_DEST/zsh/dracula.zsh-theme" "$ZSH_CUSTOM/themes/dracula.zsh-theme"
 
 # gtk
-curl -L -o "$THEME_DEST/gtk.zip" https://github.com/dracula/gtk/archive/master.zip
+[ ! -f "$THEME_DEST/gtk.zip" ] && curl -L -o "$THEME_DEST/gtk.zip" https://github.com/dracula/gtk/archive/master.zip
 mkdir -p "$HOME/.themes"
-unzip -o "$THEME_DEST/gtk.zip" -d "$HOME/.themes/"
+[ -z "$(ls -A "$HOME/.themes/")" ] && unzip -o "$THEME_DEST/gtk.zip" -d "$HOME/.themes/"
 mv -n "$HOME/.themes/gtk-master" "$HOME/.themes/Dracula"
 
 install_plugin "https://github.com/dracula/gtk.git" "$THEME_DEST/gtk"
@@ -106,9 +107,9 @@ mkdir -p "$XDG_CONFIG_HOME/gtk-4.0"
 ln -sf "$THEME_DEST/gtk/gtk-4.0/gtk.css" "$XDG_CONFIG_HOME/gtk-4.0/gtk.css"
 ln -sf "$THEME_DEST/gtk/gtk-4.0/gtk-dark.css" "$XDG_CONFIG_HOME/gtk-4.0/gtk-dark.css"
 
-curl -L -o "$THEME_DEST/icons.zip" https://github.com/dracula/gtk/files/5214870/Dracula.zip
+[ ! -f "$THEME_DEST/icons.zip" ] && curl -L -o "$THEME_DEST/icons.zip" https://github.com/dracula/gtk/files/5214870/Dracula.zip
 mkdir -p "$HOME/.icons"
-unzip -o "$THEME_DEST/icons.zip" -d "$HOME/.icons/"
+[ -z "$(ls -A "$HOME/.icons/")" ] && unzip -o "$THEME_DEST/icons.zip" -d "$HOME/.icons/"
 
 # i3-lock
 mkdir -p "$HOME/.local/bin"
@@ -118,6 +119,18 @@ ln -sf "$XDG_CONFIG_HOME/i3lock-color/lock" "$HOME/.local/bin/i3lock-dracula"
 # --- Install Dev Packages ---
 echo "Installing dev packages..."
 yay -S --needed --noconfirm tree-sitter tree-sitter-cli pyright bash-language-server
+yay -S --needed --noconfirm texlive perl-yaml-tiny perl-file-homedir
+
+# setup latex/beamer
+install_plugin "https://github.com/dracula/beamer.git" "$THEME_DEST/beamer"
+mkdir -p "$HOME/texmf/tex/latex/beamer/themes/color/"
+ln -sf "$THEME_DEST/beamer/beamercolorthemedracula.sty" "$HOME/texmf/tex/latex/beamer/themes/color/beamercolorthemedracula.sty"
+
+install_plugin "https://github.com/dracula/latex.git" "$THEME_DEST/latex"
+mkdir -p "$HOME/texmf/tex/latex/draculatheme"
+ln -sf "$THEME_DEST/latex/draculatheme.sty" "$HOME/texmf/tex/latex/draculatheme/draculatheme.sty"
+
+texhash
 
 # add correct permissions
 sudo chown root:root limit.sh
