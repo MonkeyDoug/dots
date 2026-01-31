@@ -37,7 +37,7 @@ fi
 echo "Installing packages..."
 yay -S --needed --noconfirm zsh neovim-nightly-bin kitty starship rxfetch openssh unzip i3lock-color xidlehook
 yay -S --needed --noconfirm qtile qtile-extras ttf-iosevka-nerd
-yay -S --needed --noconfirm xorg xorg-xinit
+yay -S --needed --noconfirm xorg xorg-xinit xsel
 yay -S --needed --noconfirm zathura zathura-pdf-poppler
 
 # --- Setup Xorg ---
